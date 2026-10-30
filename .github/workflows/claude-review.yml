@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write # needed by the action to authenticate as the Claude GitHub App
 
 concurrency:
   group: claude-review-${{ github.ref }}
@@ -27,7 +28,11 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          claude_args: "--max-turns 10"
+          # In automation mode Claude may use only the tools listed here: read the
+          # pull request and post one comment, nothing else.
+          claude_args: >-
+            --max-turns 10
+            --allowedTools "Read,Grep,Glob,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
           prompt: |
             Review pull request #${{ github.event.pull_request.number }} of ${{ github.repository }}
             against CLAUDE.md, with the checklist of .claude/agents/code-reviewer.md.
