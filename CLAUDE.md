@@ -28,5 +28,8 @@ and docs/DECISIONS.md before changing the data model.
 - Workspace data is private: never cache it across users ("use cache" is for public data only).
 - Clients send ids and the version they loaded, never positions: the server reads neighbours itself.
 - Board logic (moves, positions) lives in pure functions in `src/lib/board/` with unit tests.
+- Documents: private bucket `documents`, paths `<workspace>/<document>/<file>`. Never make the bucket
+  public, never store signed URLs, and never send file bytes through a Server Action. File rules live
+  in `src/lib/documents/files.ts`.
 - Do not modify tests to make them pass unless the requirement changed; say so explicitly if you do.
 - Keep changes small and focused; propose a plan first for anything touching more than three files.

@@ -23,7 +23,8 @@ npx supabase db reset        # applies supabase/migrations
 npm run dev
 ```
 
-Without Supabase, `/design/board` shows the board with sample data (moves kept in memory).
+Without Supabase, `/design/board` shows the board with sample data (moves kept in memory)
+and `/design/documents` shows the documents page (uploads kept in memory).
 
 ## Tests
 ```bash

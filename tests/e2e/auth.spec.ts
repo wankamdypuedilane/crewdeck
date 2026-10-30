@@ -28,3 +28,13 @@ test("workspaces and boards are private", async ({ page }) => {
   await page.goto("/workspaces/00000000-0000-4000-8000-000000000000/boards/00000000-0000-4000-8000-000000000001");
   await expect(page).toHaveURL(/\/sign-in\?next=%2Fworkspaces%2F/);
 });
+
+test("documents and download links are private", async ({ page, request }) => {
+  const ws = "00000000-0000-4000-8000-000000000000";
+  await page.goto(`/workspaces/${ws}/documents`);
+  await expect(page).toHaveURL(/\/sign-in\?next=%2Fworkspaces%2F.*%2Fdocuments/);
+  // The Route Handler never reaches Storage without a session.
+  const response = await request.get(`/workspaces/${ws}/documents/00000000-0000-4000-8000-000000000002/download`, { maxRedirects: 0 });
+  expect(response.status()).toBe(307);
+  expect(response.headers()["location"]).toMatch(/^\/sign-in\?next=/);
+});

@@ -18,7 +18,10 @@ creative and software teams of 3 to 30 people.
 7. Concurrency: two people editing or moving the same task never silently overwrite each other.
 8. Real-time: changes by teammates appear without reloading.
 9. Work-in-progress limits are displayed when a column exceeds its limit.
-10. Documents (chapter 14): private project files with time-limited download links.
+10. Documents (chapter 14): members share project files (PDF, PNG, JPEG, WebP,
+    plain text, Markdown, CSV; up to 25 MB each). Files are private to the
+    workspace; downloads use links valid for one minute. The uploader, the owner
+    and admins may delete a document; files are never replaced in place.
 
 ## Non-goals for version 1
 Invitations to people without an account, comments, notifications, billing.

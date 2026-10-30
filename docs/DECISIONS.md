@@ -28,3 +28,28 @@ never rendered directly.
 ## 2026-11-06: @dnd-kit/core 6 rather than @dnd-kit/react
 `@dnd-kit/react` is still 0.x (October 2026). Version 6 of `@dnd-kit/core` is
 stable, supports React 19 and has keyboard sensors and screen reader announcements.
+
+## 2026-11-07: Documents in a private bucket, one folder per workspace
+Files live in the private bucket `documents` at `<workspace id>/<document id>/<file name>`.
+Storage policies read the workspace id from the path (`private.document_workspace()`,
+which returns null for malformed paths instead of raising a cast error). The object
+name is a plain ASCII version of the file name; the original name is kept in
+`documents.name` and used for downloads.
+
+## 2026-11-07: Direct uploads with signed upload URLs
+Files go from the browser to Storage, not through a Server Action: no body-size
+limit to raise, no double transfer on the user's connection. The server signs an
+upload URL for one path (Storage checks the insert policy at that moment), then
+verifies the stored file (served type, size, magic number or UTF-8 text) before
+inserting the metadata row. A file that fails the check is deleted.
+
+## 2026-11-07: The metadata row is created after the file, and trusts Storage
+A row can only describe an existing object uploaded by the same user (insert
+policy). A trigger copies size and type from `storage.objects.metadata`; clients
+can insert only id, workspace_id, name and storage_path. Deletion removes the row
+first, then the file: a failure leaves an unreferenced file, never a dangling row.
+
+## 2026-11-07: Downloads through a Route Handler and one-minute signed URLs
+Links point to `/workspaces/[id]/documents/[docId]/download`, which checks the
+row through RLS and redirects (303, no-store) to a signed URL valid for 60 seconds,
+with `download` set to the original name (Content-Disposition: attachment).

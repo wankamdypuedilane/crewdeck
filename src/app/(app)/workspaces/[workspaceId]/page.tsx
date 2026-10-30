@@ -50,6 +50,13 @@ async function WorkspaceDetails({ params }: { params: PageProps<"/workspaces/[wo
         )}
         {(myRole === "owner" || myRole === "admin") && <CreateBoardForm workspaceId={workspace.id} />}
       </section>
+      <section aria-labelledby="documents" className="space-y-3">
+        <h2 id="documents" className="text-xl font-semibold">Documents</h2>
+        <p className="text-muted-foreground">Briefs, sketches and notes, visible to members only.</p>
+        <Link href={`/workspaces/${workspace.id}/documents`} className="inline-block font-medium text-primary underline-offset-4 hover:underline">
+          Open documents
+        </Link>
+      </section>
       <section aria-labelledby="members" className="space-y-4">
         <h2 id="members" className="text-xl font-semibold">Members</h2>
         <ul className="divide-y rounded-lg border">
