@@ -26,7 +26,7 @@ and docs/DECISIONS.md before changing the data model.
 - Use semantic design tokens (`bg-primary`, `text-muted-foreground`), never raw colours.
 - Validate all user input on the server with zod.
 - Workspace data is private: never cache it across users ("use cache" is for public data only).
-- Clients send ids, never positions or versions they computed: the server reads them.
+- Clients send ids and the version they loaded, never positions: the server reads neighbours itself.
 - Board logic (moves, positions) lives in pure functions in `src/lib/board/` with unit tests.
 - Do not modify tests to make them pass unless the requirement changed; say so explicitly if you do.
 - Keep changes small and focused; propose a plan first for anything touching more than three files.
