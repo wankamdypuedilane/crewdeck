@@ -1,0 +1,35 @@
+name: Claude review
+
+# An automated first review of each pull request, posted as comments. It never
+# merges or pushes: a human reviewer still approves every change.
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: claude-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Draft pull requests and pull requests from forks (which get no secrets) are skipped.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--max-turns 10"
+          prompt: |
+            Review pull request #${{ github.event.pull_request.number }} of ${{ github.repository }}
+            against CLAUDE.md, with the checklist of .claude/agents/code-reviewer.md.
+            Post one summary comment: verdict, then findings with file:line, ordered by severity.
+            Report anything you could not verify as "unverified". Do not change any file.

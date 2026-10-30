@@ -33,3 +33,6 @@ and docs/DECISIONS.md before changing the data model.
   in `src/lib/documents/files.ts`.
 - Do not modify tests to make them pass unless the requirement changed; say so explicitly if you do.
 - Keep changes small and focused; propose a plan first for anything touching more than three files.
+- Agent workflow: docs/AI-WORKFLOW.md. Schema changes use the /new-migration skill; run /ship-check and
+  the code-reviewer subagent before a pull request. Hooks in .claude/settings.json lint edited files and
+  block destructive commands: fix what they report, never work around them.
